@@ -1,6 +1,6 @@
 ﻿using CommandLine;
 
-namespace HtmlToCsvStatements
+namespace AenSidhe.TechnoBank.HtmlToCsvStatements
 {
     internal class Options
     {

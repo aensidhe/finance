@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using Serilog;
 
-namespace HtmlToCsvStatements
+namespace AenSidhe.TechnoBank.HtmlToCsvStatements
 {
     internal class Transaction
     {

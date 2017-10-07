@@ -355,5 +355,7 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
-HtmlToCsvStatements/output.csv
-HtmlToCsvStatements/Sample.html
+
+# Manual entries
+AenSidhe.TechnoBank.HtmlToCsvStatements/output.csv
+AenSidhe.TechnoBank.HtmlToCsvStatements/Sample.html
