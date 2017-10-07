@@ -13,7 +13,7 @@ namespace HtmlToCsvStatements
 
         public static readonly SortedSet<string> Currencies = new SortedSet<string>();
 
-        public static IEnumerable<Transaction> Parse(IReadOnlyList<HtmlNode> nodes, string mainCurrency)
+        public static IEnumerable<Transaction> Parse(IReadOnlyList<HtmlNode> nodes, Options options)
         {
             var date = E(nodes[0]);
             var comment = E(nodes[2]);
@@ -40,7 +40,7 @@ namespace HtmlToCsvStatements
 
             if (sums.Count == 1)
             {
-                if (sums.Single().Key != mainCurrency)
+                if (sums.Single().Key != options.MainCurrency)
                 {
                     Log.Warning("No main currency: {Date}, {Comment}, {Spending}", date, comment, S(sums));
                 }
@@ -49,17 +49,23 @@ namespace HtmlToCsvStatements
                 yield break;
             }
 
-            if (!sums.TryGetValue(mainCurrency, out var mainSum))
+            if (!sums.TryGetValue(options.MainCurrency, out var mainSum))
             {
                 Log.Error("No main currency in 2 currency transaction: {Date}, {Comment}, {Spending}", date, comment, S(sums));
                 yield break;
             }
 
-            var convertedSum = sums.Single(x => x.Key != mainCurrency);
+            if (!options.GenerateExchangeTransaction)
+            {
+                yield return new Transaction(date, comment, sums);
+                yield break;
+            }
+
+            var convertedSum = sums.Single(x => x.Key != options.MainCurrency);
 
             yield return new Transaction(date, $"Exchange for {comment}", new Dictionary<string, decimal>
             {
-                { mainCurrency, mainSum },
+                { options.MainCurrency, mainSum },
                 { convertedSum.Key, -convertedSum.Value }
             });
 

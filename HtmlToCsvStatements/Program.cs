@@ -44,7 +44,7 @@ namespace HtmlToCsvStatements
             var grid = divWithGrid.SelectSingleNode("div/table/tbody");
             var transactions = grid.ChildNodes
                 .Where(row => row.Name == "tr")
-                .SelectMany(row => Transaction.Parse(row.ChildNodes.Where(x => x.Name == "td").ToArray(), options.MainCurrency))
+                .SelectMany(row => Transaction.Parse(row.ChildNodes.Where(x => x.Name == "td").ToArray(), options))
                 .ToList();
 
             using (var file = new FileStream(options.OutputFile, FileMode.Create, FileAccess.Write, FileShare.Read))
