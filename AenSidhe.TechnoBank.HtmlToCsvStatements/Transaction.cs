@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
@@ -21,8 +22,8 @@ namespace AenSidhe.TechnoBank.HtmlToCsvStatements
             var sums = nodes[3].ChildNodes
                 .Where(x => x.Name == "div")
                 .Select(E)
-                .Select(x => (x.Substring(x.Length - 3), SingleSpace.Replace(x.Substring(0, x.Length - 5), string.Empty)))
-                .ToDictionary(x => x.Item1, x => decimal.Parse(x.Item2));
+                .Select(x => (x.Substring(x.Length - 3), SingleSpace.Replace(x.Substring(0, x.Length - 3), string.Empty)))
+                .ToDictionary(x => x.Item1, x => decimal.Parse(x.Item2, CultureInfo.InvariantCulture));
 
             if (sums.Count > 2)
             {
