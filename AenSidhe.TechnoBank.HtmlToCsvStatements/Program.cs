@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using CommandLine;
-using CommandLine.Text;
 using HtmlAgilityPack;
 using Serilog;
 
@@ -17,16 +16,12 @@ namespace AenSidhe.TechnoBank.HtmlToCsvStatements
                 .WriteTo.Console()
                 .CreateLogger();
 
-            var options = new Options();
-            if (!Parser.Default.ParseArguments(args, options))
-            {
-                Log.Fatal(HelpText.AutoBuild(options));
-                return Parser.DefaultExitCodeFail;
-            }
-
             try
             {
-                DoAllWork(options);
+                Parser.Default
+                    .ParseArguments<Options>(args)
+                    .WithParsed(DoAllWork);
+
                 return 0;
             }
             catch (Exception e)
@@ -49,7 +44,7 @@ namespace AenSidhe.TechnoBank.HtmlToCsvStatements
 
             using (var file = new FileStream(options.OutputFile, FileMode.Create, FileAccess.Write, FileShare.Read))
             using (var writer = new StreamWriter(file))
-            using (var csv = new CsvHelper.CsvFactory().CreateWriter(writer))
+            using (var csv = new CsvHelper.Factory().CreateWriter(writer))
             {
                 csv.WriteField("Date");
                 csv.WriteField("Comment");
